@@ -1,21 +1,21 @@
 {
-  "name": "mikser-core-live",
-  "version": "2.0.0",
-  "description": "",
-  "main": "index.js",
-  "type": "module",
-  "scripts": {},
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/almero-digital-marketing/mikser-core-live.git"
-  },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/almero-digital-marketing/mikser-core-live/issues"
-  },
-  "homepage": "https://github.com/almero-digital-marketing/mikser-core-live#readme",
-  "dependencies": {
-    "alive-server": "^1.2.9"
-  }
+	"name": "mikser-core-live",
+	"version": "3.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/almero-digital-marketing/mikser-core-live.git"
+	},
+	"author": "",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/almero-digital-marketing/mikser-core-live/issues"
+	},
+	"homepage": "https://github.com/almero-digital-marketing/mikser-core-live#readme",
+	"dependencies": {
+		"alive-server": "^1.2.9"
+	}
 }
