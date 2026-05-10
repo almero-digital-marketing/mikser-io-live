@@ -1,5 +1,5 @@
 {
-	"name": "mikser-core-live",
+	"name": "mikser-io-live",
 	"version": "3.0.0",
 	"description": "",
 	"main": "index.js",
@@ -7,15 +7,18 @@
 	"scripts": {},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/almero-digital-marketing/mikser-core-live.git"
+		"url": "git+https://github.com/almero-digital-marketing/mikser-io-live.git"
 	},
 	"author": "",
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/almero-digital-marketing/mikser-core-live/issues"
+		"url": "https://github.com/almero-digital-marketing/mikser-io-live/issues"
 	},
-	"homepage": "https://github.com/almero-digital-marketing/mikser-core-live#readme",
+	"homepage": "https://github.com/almero-digital-marketing/mikser-io-live#readme",
+	"peerDependencies": {
+		"mikser-io": "^6.0.0"
+	},
 	"dependencies": {
-		"alive-server": "^1.2.9"
+		"alive-server": "^1.3.0"
 	}
 }
