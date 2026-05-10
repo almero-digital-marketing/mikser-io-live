@@ -1,6 +1,6 @@
 # mikser-io-live
 
-Live-reload dev server for [Mikser](https://github.com/almero-digital-marketing/mikser-io). Wraps [alive-server](https://github.com/davidmoshal/alive-server) and serves the configured `outputFolder`, auto-refreshing browsers as Mikser regenerates files.
+Live-reload dev server for [Mikser](https://github.com/almero-digital-marketing/mikser-io). Wraps [alive-server](https://www.npmjs.com/package/alive-server) and serves the configured `outputFolder`, auto-refreshing browsers as Mikser regenerates files.
 
 ## Install
 
