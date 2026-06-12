@@ -14,16 +14,19 @@ npm install mikser-io-live
 
 ```js
 // mikser.config.js
+import { live } from 'mikser-io-live'
+
 export default {
-  plugins: ['live'],
-  live: {
-    port: 8080,
-    open: true
-  }
+  plugins: [
+    live({
+      port: 8080,
+      open: true
+    })
+  ]
 }
 ```
 
-The `live` config object is passed straight through to `alive-server.start(...)`. Defaults applied by the plugin:
+The options object is passed straight through to `alive-server.start(...)`. Defaults applied by the plugin:
 
 - `wait: 1000`
 - `root: runtime.options.outputFolder`
