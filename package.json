@@ -1,7 +1,7 @@
 {
   "name": "mikser-io-live",
-  "version": "5.0.0",
-  "description": "",
+  "version": "5.0.1",
+  "description": "Live-reload dev server for Mikser. Wraps alive-server and serves the configured `outputFolder`, auto-refreshing browsers as Mikser regenerates files.",
   "main": "index.js",
   "type": "module",
   "scripts": {},
