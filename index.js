@@ -59,13 +59,10 @@ export function injectInto(html, script) {
 }
 
 export function live(options = {}) {
-    // `/$live` — the engine-route convention. A `$` prefix cannot collide
-    // with content, because no page is served from a path starting with one,
-    // and it cannot collide with an api endpoint either: those are named from
-    // the user's own `endpoints` config, so `/api/live` is a name somebody
-    // could legitimately take. `$` already means "mikser's, not yours" in a
-    // reference key; this is the same word for the same idea.
-    const streamPath = options.path ?? '/$live'
+    // `/live`, overridable — the same shape every other plugin mounts with:
+    // api at /api, auth at /auth, mcp at /mcp, preview at /preview. Eight of
+    // them, one pattern, and no reason for a ninth.
+    const streamPath = options.path ?? '/live'
     // Changes every start. A client that reconnects and sees a different one
     // knows mikser restarted — new code, possibly a different site — and
     // reloads rather than trusting a page the previous process rendered.

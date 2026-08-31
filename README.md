@@ -29,7 +29,7 @@ That's the whole setup. `--watch` rebuilds on change, `--server` serves the outp
 
 | option | default | |
 | --- | --- | --- |
-| `path` | `/$live` | where the event stream is mounted |
+| `path` | `/live` | where the event stream is mounted |
 
 ## What it does
 
@@ -51,15 +51,10 @@ This is a change from 5.x, which wrapped [alive-server](https://www.npmjs.com/pa
 
 ## Where it mounts
 
-`/$live`, following mikser's convention for engine-owned routes: anything the
-engine or a plugin serves lives under `/$<name>`.
-
-The `$` is what makes it safe. It cannot collide with a page, because no
-content is served from a path starting with one — and it cannot collide with an
-api endpoint either, because those are named from your own `endpoints` config,
-so `/api/live` is a name you might legitimately want. `$` already means
-"mikser's, not yours" in a reference key; this is the same word for the same
-idea.
+`/live`, and `path` moves it. That is the same shape every other mikser plugin
+uses — `/api`, `/auth`, `/mcp`, `/preview`, `/drive`, `/forms`, `/vector` —
+so if a page of yours needs that path, move this one the way you would move
+any of those.
 
 ## How the page gets the script
 
