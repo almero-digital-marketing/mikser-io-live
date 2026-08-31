@@ -25,7 +25,7 @@ export default {
 mikser --server --watch
 ```
 
-That's the whole setup. `--watch` rebuilds on change, `--server` serves the output, and this plugin connects the two to the browser.
+That's the whole setup. `--watch` rebuilds on change, `--server` serves the output, and this plugin connects the two to the browser. mikser prints every address it answers on, so testing against a phone is a matter of typing the LAN one it gives you.
 
 | option | default | |
 | --- | --- | --- |
