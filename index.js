@@ -28,14 +28,25 @@ import { readFile } from 'node:fs/promises'
 
 import { clientScript } from './lib/client.js'
 
-// Where the snippet goes, in preference order — borrowed from alive-server,
-// which is right about this: `</svg>` matters because a standalone SVG served
-// as a page has no body, and `</head>` is the fallback for a document with no
-// closing body tag at all.
-const INJECT_BEFORE = [/<\/body>/i, /<\/svg>/i, /<\/head>/i]
+// Where the snippet goes, in preference order. `</head>` is the fallback for
+// a document with no closing body tag.
+const INJECT_BEFORE = [/<\/body>/i, /<\/head>/i]
 
-// Only files that can carry a script tag.
-const INJECTABLE = new Set(['.html', '.htm', '.xhtml', '.svg'])
+// HTML only, and this is a correctness limit rather than a scope decision.
+//
+// `.svg` and `.xhtml` were here, taken from alive-server, which does inject
+// into SVG — and gets away with it because its snippet is wrapped in
+// `// <![CDATA[ ... // ]]>`. Mine is not, and an SVG served as image/svg+xml
+// is parsed as XML: `&&` starts an entity reference and `<` starts a tag, so
+// the script is not merely ignored, it is a FATAL parse error and the browser
+// renders nothing at all.
+//
+// Wrapping in CDATA would make SVG work again. Not doing it: a standalone SVG
+// page that live-reloads is a rare thing to want, breaking one outright is
+// not, and a rule that reads "html and htm" cannot be got subtly wrong the way
+// a rule that reads "html, and also XML dialects if the payload is escaped
+// correctly" can.
+const INJECTABLE = new Set(['.html', '.htm'])
 
 // Where the snippet goes in a given document, or null if there is nowhere.
 //
@@ -171,7 +182,7 @@ export function live(options = {}) {
                         return next()
                     }
                     const body = injectInto(html, clientScript(streamPath))
-                    res.type(path.extname(file) === '.svg' ? 'image/svg+xml' : 'html')
+                    res.type('html')
                     res.set('Cache-Control', 'no-store')
                     res.send(body)
                 }).catch(() => next())
@@ -233,6 +244,6 @@ function warnOnce(logger, file) {
     if (warned.has(file)) return
     warned.add(file)
     logger?.warn?.({ code: 'live-no-inject-point' },
-        'Could not inject the live-reload snippet into %s — it has no </body>, </svg> or </head>. That page '
+        'Could not inject the live-reload snippet into %s — it has no </body> or </head>. That page '
         + 'will not reload on its own; every other page still will.', file)
 }

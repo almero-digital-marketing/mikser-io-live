@@ -58,7 +58,9 @@ any of those.
 
 ## How the page gets the script
 
-A small snippet is injected before `</body>`, falling back to `</svg>` then `</head>` — the same order [alive-server](https://www.npmjs.com/package/alive-server) uses, and right for the same reasons: a standalone SVG served as a page has no body, and some documents have no closing body tag at all. A page with none of the three is warned about once, because a page that silently never reloads looks exactly like a reload that is broken.
+A small snippet is injected before `</body>`, falling back to `</head>` for a document with no closing body tag. A page with neither is warned about once, because a page that silently never reloads looks exactly like a reload that is broken.
+
+**`.html` and `.htm` only.** Nothing else is touched — in particular not SVG. An SVG served as `image/svg+xml` is parsed as XML, where the snippet's `&&` starts an entity reference and `<` starts a tag, so injecting there is not a no-op but a fatal parse error: the browser draws nothing. [alive-server](https://www.npmjs.com/package/alive-server) does inject into SVG and gets away with it by wrapping its script in `<![CDATA[ ]]>`; this one does not, and excluding the format outright is the version that cannot be got subtly wrong later.
 
 Requests carrying an `Origin` header are left alone. Those are `fetch`/XHR — script asking for the same HTML as data — and injecting there corrupts what the caller parses.
 

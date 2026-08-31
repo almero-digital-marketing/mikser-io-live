@@ -11,10 +11,13 @@ describe('finding somewhere to put the snippet', () => {
         assert.equal(injectionPoint('<html><head></head><body>hi</body></html>'), '</body>')
     })
 
-    it('falls back to a closing svg', () => {
-        // A standalone SVG served as a page has no body at all, and is a thing
-        // mikser renders. Borrowed from alive-server, which is right about it.
-        assert.equal(injectionPoint('<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>'), '</svg>')
+    it('does NOT treat a closing svg as an injection point', () => {
+        // An SVG served as image/svg+xml is parsed as XML, where the script's
+        // `&&` starts an entity reference and `<` starts a tag. The snippet is
+        // not ignored there — it is a fatal parse error and the browser draws
+        // nothing. alive-server injects into SVG and gets away with it because
+        // its snippet is CDATA-wrapped; this one is not.
+        assert.equal(injectionPoint('<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>'), null)
     })
 
     it('falls back to the head for a document with no closing body', () => {
@@ -73,5 +76,22 @@ describe('the client snippet', () => {
 
     it('reloads when mikser restarts under it', () => {
         assert.match(clientScript('/x'), /boot !== id/)
+    })
+})
+
+describe('what it will and will not touch', () => {
+    // The rule is html and htm. Anything XML-parsed is excluded outright
+    // rather than escaped into working, because a rule that says "HTML" cannot
+    // be got subtly wrong the way "HTML, plus XML dialects if the payload is
+    // escaped correctly" can.
+    it('leaves an svg document alone entirely', () => {
+        const svg = '<svg xmlns="http://www.w3.org/2000/svg"><rect/></svg>'
+        assert.equal(injectInto(svg, '<script>a && b</script>'), svg)
+    })
+
+    it('keeps the payload that would break XML, so the exclusion is load-bearing', () => {
+        // If the snippet ever became XML-safe this test says so, and the
+        // exclusion could be revisited deliberately rather than by accident.
+        assert.match(clientScript('/live'), /&&/)
     })
 })

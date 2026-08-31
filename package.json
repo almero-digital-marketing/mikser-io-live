@@ -1,6 +1,6 @@
 {
   "name": "mikser-io-live",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "description": "Live reload for mikser-io, mounted on mikser's own HTTP server. Reloads from the build report rather than by watching files, so a CSS edit swaps the stylesheet in place and a build that touched other pages does not interrupt the one you are looking at.",
   "main": "index.js",
   "type": "module",
