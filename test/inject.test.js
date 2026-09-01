@@ -3,7 +3,7 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { injectionPoint, injectInto } from '../index.js'
+import { injectionPoint, injectInto, samePage } from '../index.js'
 import { clientScript } from '../lib/client.js'
 
 describe('finding somewhere to put the snippet', () => {
@@ -93,5 +93,41 @@ describe('what it will and will not touch', () => {
         // If the snippet ever became XML-safe this test says so, and the
         // exclusion could be revisited deliberately rather than by accident.
         assert.match(clientScript('/live'), /&&/)
+    })
+})
+
+describe('deciding whether a change is THIS page', () => {
+    // One page, three URLs. The watcher reports the file it saw —
+    // /about/index.html — and a browser may be sitting on any of the three.
+    it('treats every spelling of a page as the same page', () => {
+        for (const here of ['/about', '/about/', '/about/index.html']) {
+            assert.equal(samePage(here, '/about/index.html'), true, here)
+        }
+    })
+
+    it('treats the root the same way', () => {
+        for (const here of ['/', '/index.html']) {
+            assert.equal(samePage(here, '/index.html'), true, here)
+        }
+    })
+
+    it('still says no to a different page', () => {
+        // Over-matching would reload every browser on every build, which is
+        // the behaviour this whole comparison exists to avoid.
+        assert.equal(samePage('/contact/', '/about/index.html'), false)
+        assert.equal(samePage('/', '/about/index.html'), false)
+        assert.equal(samePage('/aboutus/', '/about/index.html'), false)
+    })
+})
+
+describe('the browser and the tests agree', () => {
+    it('the snippet uses the same comparison, not a copy of it', () => {
+        // Two implementations of "is this my page" is the shape that produced
+        // the bug: the tests would keep passing while the browser used
+        // something subtly different. The snippet inlines this function's
+        // own source.
+        const script = clientScript('/live')
+        assert.ok(script.includes(samePage.toString()),
+            'the client must carry THIS function, not a second version of it')
     })
 })

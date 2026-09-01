@@ -27,6 +27,7 @@ import { existsSync, statSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 
 import { clientScript } from './lib/client.js'
+export { samePage } from './lib/paths.js'
 
 // Where the snippet goes, in preference order. `</head>` is the fallback for
 // a document with no closing body tag.
