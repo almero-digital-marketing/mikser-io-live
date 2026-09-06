@@ -237,6 +237,9 @@ export function live(options = {}) {
         // The primary flush. One event per build, with an accurate error
         // count, rather than whenever the debounce happens to expire.
         onFinalized(async () => flush())
+        // Names this package to the runtime's loaded-plugin record, so
+        // ping reports it as running rather than as undetectable.
+        return { module: import.meta.url }
     }
 }
 
