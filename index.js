@@ -26,7 +26,7 @@ import path from 'node:path'
 import { existsSync, statSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 
-import { clientScript } from './lib/client.js'
+import { clientScript, workerScript } from './lib/client.js'
 export { samePage } from './lib/paths.js'
 
 // Where the snippet goes, in preference order. `</head>` is the fallback for
@@ -151,6 +151,24 @@ export function live(options = {}) {
                 res.write(`event: hello\ndata: ${JSON.stringify({ boot })}\n\n`)
                 clients.add(res)
                 req.on('close', () => clients.delete(res))
+            })
+
+            // The worker that holds the stream for every tab of the browser.
+            // Same origin by necessity — a SharedWorker is keyed by its URL,
+            // and one built from a blob would be a new worker per tab. No
+            // caching: a worker kept from an older version would outlive it.
+            const workerPath = `${streamPath}/worker.js`
+            registerRoute({
+                path: workerPath,
+                plugin: 'live',
+                reachability: 'public',
+                label: 'Live reload worker',
+                detail: 'holds the one event stream all tabs of a browser share',
+            })
+            app.get(workerPath, (req, res) => {
+                res.type('application/javascript')
+                res.set('Cache-Control', 'no-store')
+                res.send(workerScript(streamPath))
             })
 
             // Injection, ahead of the static mount.

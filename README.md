@@ -42,7 +42,7 @@ Three behaviours worth knowing:
 - **Stylesheets swap, pages reload.** If everything that changed was CSS, the `<link>` href is refreshed and nothing else happens.
 - **Only the page you are looking at reloads.** A build that rerendered forty other pages does not interrupt this one.
 - **A mikser restart reloads.** The client notices the server it was talking to has been replaced and reloads rather than trusting a page the previous process rendered.
-- **One connection per browser, however many tabs.** The stream is an open connection for as long as a page lives, and over plain HTTP a browser allows six to a host — six tabs of the dev site would hold them all, and the next page's images would wait for good. So the tabs pick one of themselves (the Web Locks API) to hold the stream and relay its events to the rest (`BroadcastChannel`); when that tab closes, the next takes over. A browser without those APIs keeps a stream per tab.
+- **One connection per browser, however many tabs.** The stream is an open connection for as long as it lives, and over plain HTTP a browser allows six to a host — six tabs of the dev site would hold them all, a seventh would never load, and the next page's images would wait for good. So the stream lives in a `SharedWorker` (served at `<path>/worker.js`) that relays it to every tab. Not the Web Locks API: that exists only on secure origins, and a dev site is plain http on a LAN address. A browser without `SharedWorker` (Chrome on Android) keeps a stream per tab.
 
 ## Requires `--server`
 
