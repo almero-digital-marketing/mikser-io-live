@@ -182,7 +182,7 @@ export function live(options = {}) {
                         warnOnce(logger, file)
                         return next()
                     }
-                    const body = injectInto(html, clientScript(streamPath))
+                    const body = injectInto(html, clientScript(streamPath, boot))
                     res.type('html')
                     res.set('Cache-Control', 'no-store')
                     res.send(body)

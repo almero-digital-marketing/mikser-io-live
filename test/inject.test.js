@@ -57,7 +57,7 @@ describe('injecting', () => {
 
 describe('the client snippet', () => {
     it('connects to the path it was mounted at', () => {
-        assert.match(clientScript('/__custom'), /EventSource\("\/__custom"\)/)
+        assert.match(clientScript('/__custom'), /const stream = "\/__custom"/)
     })
 
     it('is marked, so a reader can tell what put it there', () => {
